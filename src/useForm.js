@@ -14,7 +14,15 @@ const initialState = {
 
 // Email regex
 const validEmailRegex = RegExp(
+  // eslint-disable-next-line no-useless-escape
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+);
+
+var strongPasswordRegex = new RegExp(
+  '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})'
+);
+var mediumRegex = new RegExp(
+  '^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})'
 );
 
 // Custom hook to handle forms
@@ -69,8 +77,9 @@ const useForm = callback => {
         });
         break;
       case 'password':
-        errors.password =
-          value.length < 8 ? 'Password must be 8 characters long!' : '';
+        errors.password = strongPasswordRegex.test(value)
+          ? ''
+          : 'Password must be 8 characters long minimum, 1 upper case, 1 lower case, 1 special character';
         setState(prevState => {
           return {
             ...prevState,
