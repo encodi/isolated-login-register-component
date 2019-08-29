@@ -111,8 +111,7 @@ const RegisterErrors = ({ errors }) => {
 function Register() {
   const [isLogged, setIsLogged] = useState(false);
   const [handleChange, handleSubmit, state] = useForm(registerUser);
-  async function registerUser() {
-    const x = await 1;
+  function registerUser() {
     console.log('registering user');
     setIsLogged(true);
   }
