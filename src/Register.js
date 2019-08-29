@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import useForm from './useForm';
 
 // Styles
-const StyledLogin = styled.div`
+const StyledRegister = styled.div`
   display: flex;
   flex-direction: column;
   width: 280px;
@@ -32,7 +33,7 @@ const StyledForm = styled.form`
   flex-wrap: wrap;
 `;
 
-const StyledLoginErrors = styled.div`
+const StyledRegisterErrors = styled.div`
   padding-bottom: 1em;
   padding-left: 0.5em;
   padding-right: 0.5em;
@@ -92,26 +93,9 @@ const StyledWrapperButton = styled.div`
   flex-wrap: wrap;
 `;
 
-// Email regex
-const validEmailRegex = RegExp(
-  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-);
-
-// Initial state
-const initialState = {
-  fullName: '',
-  email: '',
-  password: '',
-  errors: {
-    fullName: '',
-    email: '',
-    password: ''
-  }
-};
-
-const LoginErrors = ({ errors }) => {
+const RegisterErrors = ({ errors }) => {
   return (
-    <StyledLoginErrors>
+    <StyledRegisterErrors>
       <ul>
         {Object.keys(errors).map(error => {
           if (errors[error] !== '') {
@@ -120,52 +104,18 @@ const LoginErrors = ({ errors }) => {
           return '';
         })}
       </ul>
-    </StyledLoginErrors>
+    </StyledRegisterErrors>
   );
 };
 
-function Login() {
-  const [state, setState] = useState(initialState);
-  const handleChange = event => {
-    const { value, name } = event.target;
-    const errors = state.errors;
-    switch (name) {
-      case 'fullName':
-        errors.fullName =
-          value.length < 5 ? 'Full Name must be 5 characters long!' : '';
-        setState(prevState => {
-          return {
-            ...prevState,
-            fullName: value,
-            errors: Object.assign(state.errors, errors)
-          };
-        });
-        break;
-      case 'email':
-        errors.email = validEmailRegex.test(value) ? '' : 'Email is not valid!';
-        setState(prevState => {
-          return {
-            ...prevState,
-            email: value,
-            errors: Object.assign(state.errors, errors)
-          };
-        });
-        break;
-      case 'password':
-        errors.password =
-          value.length < 8 ? 'Password must be 8 characters long!' : '';
-        setState(prevState => {
-          return {
-            ...prevState,
-            password: value,
-            errors: Object.assign(state.errors, errors)
-          };
-        });
-        break;
-      default:
-        break;
-    }
-  };
+function Register() {
+  const [isLogged, setIsLogged] = useState(false);
+  const [handleChange, handleSubmit, state] = useForm(registerUser);
+  async function registerUser() {
+    const x = await 1;
+    console.log('registering user');
+    setIsLogged(true);
+  }
   const validateForm = errors => {
     let valid = true;
     Object.values(errors).forEach(
@@ -174,16 +124,14 @@ function Login() {
     );
     return valid;
   };
-  const handleSubmit = event => {
-    event.preventDefault();
-    if (validateForm(state.errors)) {
-      console.info('Valid Form');
-    } else {
-      console.error('Invalid Form');
+  useEffect(() => {
+    if (isLogged) {
+      console.log('Send to secret page');
     }
-  };
+    return () => {};
+  }, [isLogged]);
   return (
-    <StyledLogin>
+    <StyledRegister>
       <StyledTitle>Register</StyledTitle>
       <StyledForm onSubmit={handleSubmit}>
         <StyledWrapperInput>
@@ -220,7 +168,7 @@ function Login() {
           />
         </StyledWrapperInput>
         {!validateForm(state.errors) ? (
-          <LoginErrors errors={state.errors} />
+          <RegisterErrors errors={state.errors} />
         ) : (
           ''
         )}
@@ -228,8 +176,8 @@ function Login() {
           <StyledButton type="submit">Submit</StyledButton>
         </StyledWrapperButton>
       </StyledForm>
-    </StyledLogin>
+    </StyledRegister>
   );
 }
 
-export default Login;
+export default Register;

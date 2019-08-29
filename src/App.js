@@ -1,5 +1,5 @@
 import React from 'react';
-import Login from './Login';
+import Register from './Register';
 import styled from 'styled-components';
 
 function AppWrapper({ className, children }) {
@@ -19,7 +19,7 @@ const StyledAppWrapper = styled(AppWrapper)`
 function App() {
   return (
     <StyledAppWrapper>
-      <Login />
+      <Register />
     </StyledAppWrapper>
   );
 }
